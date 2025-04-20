@@ -20,13 +20,41 @@ export const JobListingsModal: React.FC<JobListingsModalProps> = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (isOpen) {
-      fetchJobListings();
-    }
-  }, [isOpen, resume, fetchJobListings]);
+  // Helper function to extract keywords from resume
+  const extractKeywordsFromResume = useCallback((resumeData: Resume): string[] => {
+    const keywords = new Set<string>();
+    
+    // Add job titles
+    resumeData.workExperiences.forEach(exp => {
+      if (exp.jobTitle) keywords.add(exp.jobTitle);
+    });
+    
+    // Add skills (both featured and from descriptions)
+    resumeData.skills.featuredSkills.forEach(skill => {
+      if (skill.skill) keywords.add(skill.skill);
+    });
+    
+    // Add keywords from skills descriptions
+    resumeData.skills.descriptions.forEach(desc => {
+      const words = desc.split(/[,;]/);
+      words.forEach(word => {
+        const trimmed = word.trim();
+        if (trimmed) keywords.add(trimmed);
+      });
+    });
+    
+    // Add degree fields
+    resumeData.educations.forEach(edu => {
+      if (edu.degree) keywords.add(edu.degree);
+    });
+    
+    return Array.from(keywords).filter(keyword => 
+      keyword.length > 2 && !['and', 'the', 'for', 'with'].includes(keyword.toLowerCase())
+    );
+  }, []);
 
-  const fetchJobListings = useCallback(async () => {
+  // Function to fetch job listings
+  const handleFetchJobListings = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -40,39 +68,14 @@ export const JobListingsModal: React.FC<JobListingsModalProps> = ({
     } finally {
       setLoading(false);
     }
-  }, [resume]);
+  }, [resume, extractKeywordsFromResume]);
 
-  const extractKeywordsFromResume = (resume: Resume): string[] => {
-    const keywords = new Set<string>();
-    
-    // Add job titles
-    resume.workExperiences.forEach(exp => {
-      if (exp.jobTitle) keywords.add(exp.jobTitle);
-    });
-    
-    // Add skills (both featured and from descriptions)
-    resume.skills.featuredSkills.forEach(skill => {
-      if (skill.skill) keywords.add(skill.skill);
-    });
-    
-    // Add keywords from skills descriptions
-    resume.skills.descriptions.forEach(desc => {
-      const words = desc.split(/[,;]/);
-      words.forEach(word => {
-        const trimmed = word.trim();
-        if (trimmed) keywords.add(trimmed);
-      });
-    });
-    
-    // Add degree fields
-    resume.educations.forEach(edu => {
-      if (edu.degree) keywords.add(edu.degree);
-    });
-    
-    return Array.from(keywords).filter(keyword => 
-      keyword.length > 2 && !['and', 'the', 'for', 'with'].includes(keyword.toLowerCase())
-    );
-  };
+  // Effect to fetch job listings when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      handleFetchJobListings();
+    }
+  }, [isOpen, handleFetchJobListings]);
 
   if (!isOpen) return null;
 
@@ -101,7 +104,7 @@ export const JobListingsModal: React.FC<JobListingsModalProps> = ({
               <p className="text-lg font-medium mb-2">Oops! Something went wrong</p>
               <p>{error}</p>
               <button 
-                onClick={fetchJobListings} 
+                onClick={handleFetchJobListings} 
                 className="mt-4 btn-primary"
               >
                 Try Again
