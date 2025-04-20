@@ -29,6 +29,7 @@
       "@utils/*": ["utils/*"],
       "@types/*": ["types/*"],
       "@components/*": ["components/*"],
+      "lib/*": ["app/lib/*"],
       "public/*": ["../public/*"],
       "*": ["*"]
     }
