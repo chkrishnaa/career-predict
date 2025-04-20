@@ -1,9 +1,7 @@
 'use client';
 
-import { useState, useCallback, useEffect } from "react";
-import { LockClosedIcon, DocumentArrowUpIcon } from "@heroicons/react/24/solid";
-import { XMarkIcon } from "@heroicons/react/24/outline";
-import Image from "next/image";
+import { useState, useCallback } from "react";
+import { DocumentArrowUpIcon } from "@heroicons/react/24/solid";
 import { cx } from "lib/cx";
 
 const defaultFileState = {
@@ -33,53 +31,58 @@ export const ResumeDropzone = ({
 
   const hasFile = Boolean(file.name);
 
-  const handleFiles = useCallback((files: FileList) => {
-    if (files.length) {
-      const file = files[0];
-      if (file.type === "application/pdf") {
-        setHasNonPdfFile(false);
-        setNewFile(file);
-      } else {
-        setHasNonPdfFile(true);
+  // Processes a file - validates and sets it if valid
+  const processFile = useCallback((uploadedFile: File) => {
+    if (uploadedFile.type === "application/pdf") {
+      setHasNonPdfFile(false);
+      
+      // Clean up previous file URL if exists
+      if (file.fileUrl) {
+        URL.revokeObjectURL(file.fileUrl);
       }
-    }
-  }, []);
 
-  const setNewFile = useCallback((newFile: File) => {
-    if (file.fileUrl) {
-      URL.revokeObjectURL(file.fileUrl);
-    }
-
-    const { name, size } = newFile;
-    const fileUrl = URL.createObjectURL(newFile);
-    setFile({ name, size, fileUrl });
-    
-    // Call the appropriate callback based on what was provided
-    if (onFileUpload) {
-      onFileUpload(newFile);
-    }
-    
-    if (onFileUrlChange) {
-      onFileUrlChange(fileUrl);
+      // Create new file state
+      const fileUrl = URL.createObjectURL(uploadedFile);
+      setFile({
+        name: uploadedFile.name,
+        size: uploadedFile.size,
+        fileUrl
+      });
+      
+      // Call the appropriate callbacks
+      if (onFileUpload) {
+        onFileUpload(uploadedFile);
+      }
+      
+      if (onFileUrlChange) {
+        onFileUrlChange(fileUrl);
+      }
+    } else {
+      setHasNonPdfFile(true);
     }
   }, [file.fileUrl, onFileUpload, onFileUrlChange]);
 
-  // Update handleFiles to use setNewFile
-  useEffect(() => {
-    // This creates a new reference to handleFiles when setNewFile changes
-    handleFiles.current = (files: FileList) => {
-      if (files.length) {
-        const file = files[0];
-        if (file.type === "application/pdf") {
-          setHasNonPdfFile(false);
-          setNewFile(file);
-        } else {
-          setHasNonPdfFile(true);
-        }
-      }
-    };
-  }, [setNewFile]);
+  // Handle file drop
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragActive(false);
 
+    const files = e.dataTransfer.files;
+    if (files.length) {
+      processFile(files[0]);
+    }
+  }, [processFile]);
+
+  // Handle files selected via input
+  const handleFileInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files && files.length) {
+      processFile(files[0]);
+    }
+  }, [processFile]);
+
+  // Handle drag events
   const handleDragEnter = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -97,29 +100,8 @@ export const ResumeDropzone = ({
     e.stopPropagation();
   }, []);
 
-  const handleDrop = useCallback(
-    (e: React.DragEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      setIsDragActive(false);
-
-      const files = e.dataTransfer.files;
-      handleFiles(files);
-    },
-    [handleFiles]
-  );
-
-  const handleFileInputChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const files = e.target.files;
-      if (files) {
-        handleFiles(files);
-      }
-    },
-    [handleFiles]
-  );
-
-  const onRemove = () => {
+  // Handle file removal
+  const onRemove = useCallback(() => {
     if (file.fileUrl) {
       URL.revokeObjectURL(file.fileUrl);
     }
@@ -131,23 +113,23 @@ export const ResumeDropzone = ({
     }
     
     if (onFileUrlChange) {
-    onFileUrlChange("");
+      onFileUrlChange("");
     }
-  };
+  }, [file.fileUrl, onFileUpload, onFileUrlChange]);
 
   return (
     <div className="w-full">
       {!hasFile ? (
-    <div
-      className={cx(
+        <div
+          className={cx(
             "relative border-2 border-dashed rounded-lg p-8 transition-all duration-300 ease-in-out",
             "flex flex-col items-center justify-center text-center",
             isDragActive
               ? "border-blue-violet-500 bg-blue-violet-50 dark:bg-blue-violet-900/20"
               : "border-gray-300 dark:border-gray-700 hover:border-blue-violet-400 dark:hover:border-blue-violet-600",
             "dark:text-gray-300 cursor-pointer group animate-fade-in",
-        className
-      )}
+            className
+          )}
           onDragEnter={handleDragEnter}
           onDragLeave={handleDragLeave}
           onDragOver={handleDragOver}
@@ -197,7 +179,7 @@ export const ResumeDropzone = ({
           <div className="flex items-center">
             <div className="p-3 bg-blue-violet-100 dark:bg-blue-violet-900/50 rounded-full mr-4">
               <DocumentArrowUpIcon className="h-8 w-8 text-blue-violet-600 dark:text-blue-violet-400" />
-              </div>
+            </div>
             <div className="flex-1">
               <p className="font-medium text-blue-violet-700 dark:text-blue-violet-300">{file.name}</p>
               <p className="text-sm text-gray-500 dark:text-gray-400">

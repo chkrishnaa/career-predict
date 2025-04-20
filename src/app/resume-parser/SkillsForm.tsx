@@ -45,7 +45,7 @@ export const SkillsForm = ({ skills, onSkillsChange }: SkillsFormProps) => {
     };
 
     fetchSkills();
-  }, []);
+  }, [skills]);
 
   // Use the processed skills if they exist
   useEffect(() => {

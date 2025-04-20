@@ -1,10 +1,9 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
-import { ResumeState } from '../types/resume';
 
 const ResumePreview: React.FC = () => {
-  const resume = useSelector((state: RootState) => state.resume) as ResumeState;
+  const resume = useSelector((state: RootState) => state.resume);
 
   if (!resume.personalInfo.name) {
     return (
