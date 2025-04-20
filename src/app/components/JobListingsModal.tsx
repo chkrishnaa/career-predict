@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Job, fetchJobs } from '../lib/api/jobsApi';
 import { Resume } from '../lib/redux/types';
 import { XMarkIcon, ArrowTopRightOnSquareIcon, BuildingOfficeIcon, MapPinIcon, CalendarIcon } from '@heroicons/react/24/outline';
@@ -24,9 +24,9 @@ export const JobListingsModal: React.FC<JobListingsModalProps> = ({
     if (isOpen) {
       fetchJobListings();
     }
-  }, [isOpen, resume]);
+  }, [isOpen, resume, fetchJobListings]);
 
-  const fetchJobListings = async () => {
+  const fetchJobListings = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -40,7 +40,7 @@ export const JobListingsModal: React.FC<JobListingsModalProps> = ({
     } finally {
       setLoading(false);
     }
-  };
+  }, [resume]);
 
   const extractKeywordsFromResume = (resume: Resume): string[] => {
     const keywords = new Set<string>();

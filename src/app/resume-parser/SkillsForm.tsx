@@ -52,7 +52,7 @@ export const SkillsForm = ({ skills, onSkillsChange }: SkillsFormProps) => {
     if (processedSkills.length > 0 && processedSkills.toString() !== skills.toString()) {
       onSkillsChange(processedSkills);
     }
-  }, [processedSkills]);
+  }, [processedSkills, skills, onSkillsChange]);
 
   // Filter skills based on input
   useEffect(() => {
