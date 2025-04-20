@@ -19,10 +19,17 @@
         "name": "next"
       }
     ],
-    "baseUrl": "./src/app",
+    "baseUrl": "./src",
     // Path Mapping Doc: https://www.typescriptlang.org/docs/handbook/module-resolution.html#path-mapping
     "paths": {
-      "public/*": ["../../public/*"],
+      "@app/*": ["app/*"],
+      "@hooks/*": ["hooks/*"],
+      "@store/*": ["store/*"],
+      "@services/*": ["services/*"],
+      "@utils/*": ["utils/*"],
+      "@types/*": ["types/*"],
+      "@components/*": ["components/*"],
+      "public/*": ["../public/*"],
       "*": ["*"]
     }
   },
