@@ -1,3 +1,13 @@
+// Resume types
+
+export interface PersonalInfo {
+  name: string;
+  email: string;
+  phone: string;
+  location: string;
+  website?: string;
+}
+
 export interface Experience {
   company: string;
   position: string;
@@ -14,18 +24,21 @@ export interface Education {
   endDate: string;
 }
 
-export interface PersonalInfo {
+export interface Skill {
   name: string;
-  email: string;
-  phone: string;
-  location: string;
-  website?: string;
+  level?: 'beginner' | 'intermediate' | 'advanced' | 'expert';
 }
 
-export interface ResumeState {
+export interface Resume {
   personalInfo: PersonalInfo;
   summary: string;
   experience: Experience[];
   education: Education[];
   skills: string[];
+}
+
+export interface ResumeState {
+  resume: Resume;
+  status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  error: string | null;
 } 

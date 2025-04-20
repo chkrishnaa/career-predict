@@ -1,5 +1,12 @@
 // Export all TypeScript types here
-export * from './resume';
-export * from './api';
-export * from './auth';
-export * from './common'; 
+import * as apiTypes from './api';
+import * as authTypes from './auth';
+import * as commonTypes from './common';
+import * as resumeTypes from './resume';
+
+export {
+  apiTypes,
+  authTypes,
+  commonTypes,
+  resumeTypes
+}; 
