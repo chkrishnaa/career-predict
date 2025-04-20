@@ -1,0 +1,139 @@
+@import url("/fonts/fonts.css");
+@import url("/index.css");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-blue-violet-50: #efeeff;
+    --color-blue-violet-100: #e2e0ff;
+    --color-blue-violet-200: #cac7fe;
+    --color-blue-violet-300: #aaa5fc;
+    --color-blue-violet-400: #8881f8;
+    --color-blue-violet-500: #6b63f1;
+    --color-blue-violet-600: #4f46e5;
+    --color-blue-violet-700: #4038ca;
+    --color-blue-violet-800: #3730a3;
+    --color-blue-violet-900: #332e81;
+    --color-blue-violet-950: #1e1b4b;
+  }
+
+  body {
+    @apply bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100 transition-colors duration-300;
+  }
+  
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    @apply w-2 h-2;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-gray-100 dark:bg-gray-800;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-blue-violet-400 dark:bg-blue-violet-600 rounded-full;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-blue-violet-500 dark:bg-blue-violet-500;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-medium text-blue-violet-900 dark:text-blue-violet-100;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply px-6 py-2 bg-blue-violet-600 text-white font-medium rounded-md 
+           hover:bg-blue-violet-700 focus:outline-none focus:ring-2 focus:ring-blue-violet-500 
+           focus:ring-offset-2 transition-colors duration-300 ease-in-out
+           dark:bg-blue-violet-700 dark:hover:bg-blue-violet-600 shadow-md hover:shadow-lg
+           active:translate-y-0.5 transform;
+  }
+  
+  .btn-secondary {
+    @apply px-6 py-2 bg-white text-blue-violet-600 font-medium rounded-md border border-blue-violet-300
+           hover:bg-blue-violet-50 focus:outline-none focus:ring-2 focus:ring-blue-violet-400 
+           focus:ring-offset-2 transition-colors duration-300 ease-in-out
+           dark:bg-gray-800 dark:text-blue-violet-300 dark:border-blue-violet-700
+           dark:hover:bg-gray-700 shadow-sm hover:shadow active:translate-y-0.5 transform;
+  }
+  
+  .card {
+    @apply bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300
+           p-6 border border-gray-200 dark:border-gray-700 animate-fade-in;
+  }
+  
+  .form-input {
+    @apply w-full border rounded-md p-2 text-sm bg-white dark:bg-gray-800 
+           border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-100
+           focus:border-blue-violet-500 focus:ring-2 focus:ring-blue-violet-200 dark:focus:ring-blue-violet-800
+           transition-colors duration-200 outline-none;
+  }
+  
+  .form-textarea {
+    @apply w-full border rounded-md p-2 text-sm bg-white dark:bg-gray-800 
+           border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-100
+           focus:border-blue-violet-500 focus:ring-2 focus:ring-blue-violet-200 dark:focus:ring-blue-violet-800
+           transition-all duration-200 outline-none resize-none;
+  }
+  
+  .form-label {
+    @apply block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1;
+  }
+  
+  .table-header {
+    @apply bg-blue-violet-50 dark:bg-blue-violet-950 text-blue-violet-900 dark:text-blue-violet-100 
+           px-4 py-3 font-semibold text-left transition-colors duration-300;
+  }
+  
+  .table-cell {
+    @apply border border-gray-200 dark:border-gray-700 px-4 py-3 text-gray-700 dark:text-gray-300
+           transition-colors duration-300;
+  }
+  
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+           bg-blue-violet-100 text-blue-violet-800 dark:bg-blue-violet-900 dark:text-blue-violet-100;
+  }
+  
+  .badge-success {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+           bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100;
+  }
+  
+  .badge-warning {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+           bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100;
+  }
+  
+  .badge-error {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+           bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100;
+  }
+  
+  .animation-fade-in {
+    @apply animate-fade-in;
+  }
+  
+  .animation-slide-up {
+    @apply animate-slide-up;
+  }
+}
+
+:root {
+  --theme-purple: #5d52d9;
+  --theme-blue: #4fc5eb;
+  /* Keep the below variable names in sync with CSS_VARIABLES in globals-css.ts */
+  --top-nav-bar-height: 3.5rem;
+  --resume-control-bar-height: 3rem;
+  --resume-padding: 1.5rem;
+}
